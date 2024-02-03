@@ -1,0 +1,25 @@
+[package]
+name = "app"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# specify the default binary
+default-run = "app"
+
+[dependencies]
+entity = { path = "../entity" }
+migration = { path = "../migration" }
+dotenvy = "0.15.7" # Loading .env file
+tokio = { version = "1.35.1", features = ["full"] }
+actix-cors = "0.7.0"
+actix-web = "4.4.1"
+sea-orm = { version = "0.12.0", features = [
+  "debug-print",
+  "runtime-tokio-native-tls",
+  "sqlx-mysql",
+] }
+serde = "1.0.196"
+[dependencies.sea-orm-migration]
+version = "0.12"
+features = ["sqlx-mysql","runtime-tokio-native-tls"]
