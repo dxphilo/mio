@@ -35,7 +35,7 @@ async fn main() -> std::io::Result<()> {
         Ok(status) => {
             println!("Migration status: {:?}", status);
         }
-        Err(err) => {
+        Err(_err) => {
             let conn_res = db_conn.execute(Statement::from_string(sea_orm::DatabaseBackend::MySql, "CREATE TABLE IF NOT EXISTS links (
                 ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 link VARCHAR(255) NOT NULL,
