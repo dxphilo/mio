@@ -6,6 +6,7 @@ use actix_cors::Cors;
 use actix_web::web::Data;
 use actix_web::{middleware::Logger, App, HttpServer};
 use migration::Migrator;
+use sea_orm::{ConnectionTrait, Statement};
 use sea_orm_migration::MigratorTrait;
 
 use crate::env::{db_url, load_config};
@@ -27,9 +28,30 @@ async fn main() -> std::io::Result<()> {
         .expect("Database connection failed");
     
     // TODO: check migration status and handle appropriately
-    Migrator::up(&db_conn, None)
-        .await
-        .expect("Migrations failed");
+    let migration_status = Migrator::up(&db_conn, None)
+        .await;
+
+    match migration_status {
+        Ok(status) => {
+            println!("Migration status: {:?}", status);
+        }
+        Err(err) => {
+            let conn_res = db_conn.execute(Statement::from_string(sea_orm::DatabaseBackend::MySql, "CREATE TABLE IF NOT EXISTS links (
+                ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                link VARCHAR(255) NOT NULL,
+                count INTEGER NOT NULL,
+                created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )".to_owned())).await;
+            match conn_res {
+                Ok(val) => { println!("sql table creation succeeded:{:?}",val)}
+                Err(err) => {
+                    println!("Error creating table: {:?}", err);
+                }
+            }
+        }
+        
+    }
 
     let link_repository = LinksRepository {
         db_connection: db_conn.clone(),
