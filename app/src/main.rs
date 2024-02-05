@@ -27,7 +27,6 @@ async fn main() -> std::io::Result<()> {
         .await
         .expect("Database connection failed");
     
-    // TODO: check migration status and handle appropriately
     let migration_status = Migrator::up(&db_conn, None)
         .await;
 
