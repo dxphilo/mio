@@ -1,6 +1,6 @@
 # mio
 
-This is a RESTFUl API powering `Bookmark Collection`, a web extension that lets you share your favorite URLs that might be useful for others. You can check out the extension [here]().
+This is a RESTFUl API powering `Bookmark Collection`, a web extension that lets you share your favorite URLs. You can check out the extension [here](https://github.com/dxphilo/bookmark-collector).
 
 ## Prerequisites
 
